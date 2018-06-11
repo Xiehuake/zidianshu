@@ -1,61 +1,67 @@
-// 单词查找树： R向查找树
+//   链表
 #include <stdio.h>
-#define R 26
-// 数据结构
-typedef struct trieST{
-	int val;
-	struct trieST ** next;
-}TrieST;
-// API
-TrieST * get(TrieST * root, char * key, int d);
-TrieST * Creat(int r);
-TrieST * put(TrieST * root, char * key, int val, int d);
+typedef int item;
+typedef struct node {
+	item item;
+	struct node * next;
+}Node;
+typedef Node * List; 
+List insert(List root, item item);
+List find(List root, item item);
+List delet(List root, item item);
+List CreatList();
+
 int main(void)
 {
-	int val;
-	TrieST * x, * text = NULL;
-	char input[30];
-	while (scanf("%d", &val) == 1)
-	{
-		getchar();
-		gets(input);
-		text = put(text, input, val, 0);
-	}
-	while (getchar() != '\n');
-	gets(input);
-	x = get(text, input, 0);
-	if (x->val != -1)
-		printf("%d\n", x->val);
-	else
-		printf("不存在\n");
+
+}
+List insert(List root, item item)
+{
+	List current = (List)malloc(sizeof(Node));
+	current->item = item;
+	current->next = root;
+	root = current;
+	return root;
 }
 
-TrieST * Creat(int r)
+List find(List root, item item)
 {
-	TrieST * root = (TrieST *)malloc(sizeof(TrieST));
-	root->val = -1;
-	root->next = (TrieST **)malloc(sizeof(TrieST *) * r);
-	for (int i = 0; i < r; i++)
-		root->next[i] = NULL;
-	return root;
+	List it;
+	for (it = root; it != NULL && it->item != item; it = it->next);
+	return it;
 }
-TrieST * put(TrieST * root, char * key, int val, int d)
+
+List delet(List root, item item)
 {
-	if (!root)
-		root = Creat(R);
-	if (d == strlen(key))
-		root->val = val;
-	else
-		root->next[key[d] - 'a'] = put(root->next[key[d] - 'a'], key, val, d + 1);
-	return root;
-}
-TrieST * get(TrieST * root, char * key, int d)
-{
-	char c = key[d];
-	if (!root)
+	List pre = NULL;
+	List heart = root;
+	if (!heart)
 		return NULL;
-	if (d == strlen(key))
-		return root;
-	int n = c - 'a';
-	get(root->next[n], key, d + 1);
+	while (heart->next != NULL && heart->item != item)
+	{
+		pre = heart;
+		heart = heart->next;
+	}
+	if (heart->item == item)  // 找到了
+	{
+		if (heart == root) // 是第一个
+		{
+			List temp = root;
+			root = root->next;
+			free(temp);
+		}
+		else
+		{
+			List temp = heart;
+			pre->next = heart->next;
+			free(temp);
+		}
+	}
+	return root;
+}
+
+List CreatList()
+{
+	List current = NULL;
+	return current;
 }
